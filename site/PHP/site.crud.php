@@ -53,7 +53,7 @@
        $sql="SELECT * FROM portfolios where id={$id}";
        $result=mysqli_query($link,$sql);
        
-      $portfolios=mysqli_fetch_object(mysqli_query($link,$sql));
+      $portfolio=mysqli_fetch_object(mysqli_query($link,$sql));
       mysqli_close($link);
       return $portfolio;
    }

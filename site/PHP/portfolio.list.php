@@ -1,5 +1,5 @@
 <?php
- include_once('PHP/site.crud.php');
+ include_once("site.crud.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,17 +17,13 @@
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
         <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
         <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="css/styles.css" rel="stylesheet" />
+        <link href="../css/styles.css" rel="stylesheet" />
     </head>
     <body id="page-top">
-        <?php require("navbar.php");?>
+        <?php require("../navbar.php");?>
     <!-- Masthead-->
         <header class="masthead bg-primary text-white text-center">
             <div class="container d-flex align-items-center flex-column">
-                <!-- Masthead Avatar Image-->
-                <img class="masthead-avatar mb-5" src="assets/img/avataaars.svg" alt="..." />
-                <!-- Masthead Heading-->
-                <h1 class="masthead-heading text-uppercase mb-0">Start Bootstrap</h1>
                 <!-- Icon Divider-->
                 <div class="divider-custom divider-light">
                     <div class="divider-custom-line"></div>
@@ -35,58 +31,40 @@
                     <div class="divider-custom-line"></div>
                 </div>
                 <!-- Masthead Subheading-->
-                <p class="masthead-subheading font-weight-light mb-0">Graphic Artist - Web Designer - Illustrator</p>
             </div>
         </header>
-        <!-- Portfolio Section-->
-        <section class="page-section portfolio" id="portfolio">
+        <section class="page-section" id="portfolios">
             <div class="container">
-                <!-- Portfolio Section Heading-->
-                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Portfolio</h2>
-                <!-- Icon Divider-->
-                <div class="divider-custom">
-                    <div class="divider-custom-line"></div>
-                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                    <div class="divider-custom-line"></div>
+                <div class="text-center">
+                    <h2 class="section-heading text-uppercase">Sistema de Gerenciamento de Portfolios</h2>
+                    <h3 class="section-subheading text-muted">Utilize a tabela abaixo para editar ou excluir as informações sobre os serviços prestados.</h3>
+                    <?php if($_GET) : ?>
+                    <h3 class="section-subheading text-danger"><strong>Ocoreu um erro ao tentar alterar o banco de dados.</strong></h3>
+                    <?php endif; ?>
                 </div>
-                <!-- Portfolio Grid Items-->
-                <div class="row justify-content-center">
-                    <!-- Portfolio Item 1-->
-                    <?php foreach(listaPortfolios() as $indice => $portfolio) : ?>
-                    <div class="col-md-6 col-lg-4 mb-5">
-                        <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal<?= ($indice + 1) ?>">
-                            <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                                <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
-                            </div>
-                            <img class="img-fluid" src="assets/img/portfolio/<?=($portfolio-> imagem)?>" alt="..." />
-                        </div>
-                    </div>
-                    <?php endforeach;?>
-            </div>
-        </section>
-        <!-- About Section-->
-        <section class="page-section bg-primary text-white mb-0" id="about">
-            <div class="container">
-                <!-- About Section Heading-->
-                <h2 class="page-section-heading text-center text-uppercase text-white">About</h2>
-                <!-- Icon Divider-->
-                <div class="divider-custom divider-light">
-                    <div class="divider-custom-line"></div>
-                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                    <div class="divider-custom-line"></div>
-                </div>
-                <!-- About Section Content-->
-                <div class="row">
-                    <div class="col-lg-4 ms-auto"><p class="lead">Freelancer is a free bootstrap theme created by Start Bootstrap. The download includes the complete source files including HTML, CSS, and JavaScript as well as optional SASS stylesheets for easy customization.</p></div>
-                    <div class="col-lg-4 me-auto"><p class="lead">You can create your own custom avatar for the masthead, change the icon in the dividers, and add your email address to the contact form to make it fully functional!</p></div>
-                </div>
-                <!-- About Section Button-->
-                <div class="text-center mt-4">
-                    <a class="btn btn-xl btn-outline-light" href="https://startbootstrap.com/theme/freelancer/">
-                        <i class="fas fa-download me-2"></i>
-                        Free Download!
-                    </a>
-                </div>
+                <table class="table table-stripped" style="color: black;">
+                    <thead>
+                        <th>#</th>
+                        <th>imagem</th>
+                        <th>Titulo</th>
+                        <th>Descrição</th>
+                        <th>Gerir</th>
+                    </thead>
+                    <tbody>
+                        <?php foreach (listaPortfolios() as $portfolio) : ?>
+                        <tr>
+                            <td><?= $portfolio->id ?></td>
+                            <td><?= $portfolio->imagem ?></td>
+                            <td><?= $portfolio->titulo ?></td>
+                            <td><?= $portfolio->descricao ?></td>
+                            <td>
+                                <a href="portfolio.editar.form.php?id=<?= $portfolio->id ?>"><i class="fa-solid fa-pencil"></i></a>&nbsp;
+                                <a onclick="return confirm('Deseja realmente remover este item?')" href="portfolio.deletar.php?id=<?= $portfolio->id ?>"><i class="fa-solid fa-trash-can"></i></a>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
             </div>
         </section>
         <!-- Contact Section-->
@@ -197,40 +175,6 @@
         <div class="copyright py-4 text-center text-white">
             <div class="container"><small>Copyright &copy; Your Website 2022</small></div>
         </div>
-        <!-- Portfolio Modals-->
-        <?php foreach (listaPortfolios() as $indice => $portfolio) : ?>
-        <div class="portfolio-modal modal fade" id="portfolioModal<?= ($indice + 1)?>" tabindex="-1" aria-labelledby="portfolioModal<?= ($indice + 1)?>" aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header border-0"><button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button></div>
-                    <div class="modal-body text-center pb-5">
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-8">
-                                    <!-- Portfolio Modal - Title-->
-                                    <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0"><?= ($portfolio -> titulo)?></h2>
-                                    <!-- Icon Divider-->
-                                    <div class="divider-custom">
-                                        <div class="divider-custom-line"></div>
-                                        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                                        <div class="divider-custom-line"></div>
-                                    </div>
-                                    <!-- Portfolio Modal - Image-->
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/<?= ($portfolio -> imagem)?>" alt="..." />
-                                    <!-- Portfolio Modal - Text-->
-                                    <p class="mb-4"><?=($portfolio -> descricao)?></p>
-                                    <button class="btn btn-primary" data-bs-dismiss="modal">
-                                        <i class="fas fa-xmark fa-fw"></i>
-                                        Close Window
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php endforeach;?>
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
